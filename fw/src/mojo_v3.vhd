@@ -54,13 +54,13 @@ architecture behavioral of mojo_v3 is
   -- Constants --
   ---------------
 
-  constant c_clk_freq_hz  : natural := 50_000_000;
+  constant c_clk_freq_hz : natural := 50_000_000;
 
   -------------
   -- Signals --
   -------------
 
-  signal rst    : std_logic;
+  signal rst : std_logic;
 
   -------------
   -- Aliases --
