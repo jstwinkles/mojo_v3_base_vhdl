@@ -45,7 +45,7 @@ architecture behavioral of cclk_detector is
   ---------------
 
   -- FPGA needs to wait until the CCLK signal is high for at least 512 cycles before taking control of its outputs
-  constant c_count_max : natural := 511;
+  constant c_count_max : natural := 3;
 
   -------------
   -- Signals --
@@ -59,6 +59,9 @@ architecture behavioral of cclk_detector is
 
 begin
 
+  -- Process for asserting the READY signal.  When CCLK goes high, a counter is started.  When that counter reaches 512,
+  -- READY will be asserted.  If CCLK goes low at any point, READY is deasserted and the counter is restarted.
+  -- Asserting RST will have the same effect.
   process(CLK)
   begin
     if rising_edge(CLK) then
