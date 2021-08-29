@@ -53,7 +53,7 @@ architecture behavioral of cclk_detector_tb is
 begin
 
   -- Unit under test
-  cclk_detect_inst : entity work.cclk_detector
+  uut : entity work.cclk_detector
   generic map(
     G_CLK_FREQ_HZ => c_clk_freq_hz
   )
@@ -77,6 +77,7 @@ begin
     wait for c_cclk_release_delay;
     cclk <= '1';
     wait until ready = '1';
+    wait;
   end process test_proc;
 
 end behavioral;

@@ -23,22 +23,18 @@ use ieee.math_real.all;
 
 entity cclk_detector is
   generic(
-    G_CLK_FREQ_HZ : natural
+    G_CLK_FREQ_HZ : natural --!
   );
   port(
-    CLK   : in  std_logic;
-    RST   : in  std_logic;
+    CLK   : in  std_logic; --!
+    RST   : in  std_logic; --!
     --
-    CCLK  : in  std_logic;
-    READY : out std_logic
+    CCLK  : in  std_logic; --!
+    READY : out std_logic --!
   );
 end cclk_detector;
 
 architecture behavioral of cclk_detector is
-
-  -----------
-  -- Types --
-  -----------
 
   ---------------
   -- Constants --
@@ -52,10 +48,6 @@ architecture behavioral of cclk_detector is
   -------------
 
   signal count : natural range 0 to c_count_max := 0;
-
-  -------------
-  -- Aliases --
-  -------------
 
 begin
 
