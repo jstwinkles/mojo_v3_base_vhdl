@@ -31,7 +31,7 @@ entity serial_rx is
     CLK       : in  std_logic;  --! The system clock input signal
     RST       : in  std_logic;  --! The system reset input (active high)
     --
-    RX        : in  std_logic;  --! The serial UART data signal (idles high)
+    RX        : in  std_logic;  --! The received serial UART data (idles high)
     DATA      : out std_logic_vector(7 downto 0); --! The latest UART data frame that has been sampled
     NEW_DATA  : out std_logic;  --! Indicates when new serial data is available. Pulsed high for one clock cycle.
     ERROR     : out std_logic   --! Indicates a framing error.  Stays high until a new frame is started.
@@ -63,12 +63,12 @@ architecture behavioral of serial_rx is
   -------------
 
   -- bit_counter goes up to 1.5 bit periods for sampling in the middle of a bit
-  signal bit_counter  : natural range 0 to c_bit_extra_period_clks := c_bit_extra_period_clks;
+  signal bit_counter  : natural range 0 to c_bit_extra_period_clks;
   signal state        : state_t := st_idle;
   signal rx_d         : std_logic := '0';
   signal data_l       : std_logic_vector(DATA'length-1 downto 0);
-  signal bit_index    : natural range 0 to DATA'length-1 := 0;
-  signal stop_err     : std_logic := '0';
+  signal bit_index    : natural range 0 to DATA'length-1;
+  signal stop_err     : std_logic;
 
 begin
 
@@ -77,19 +77,15 @@ begin
   -- waits an additional seven bit periods to collect a total of 8 data bits.  It then waits for the STOP bit and
   -- returns to the idle state.  At the end of each frame, the data is latched on the output and the new_data signal is
   -- asserted for one clock cycle.
-  process(CLK)
+  receive_proc : process(CLK)
   begin
     if(rising_edge(CLK)) then
       if(RST = '1') then
         NEW_DATA    <= '0';
         rx_d        <= '0';
         state       <= st_idle;
-        bit_counter <= c_bit_extra_period_clks;
-        bit_index   <= 0;
         ERROR       <= '0';
-        data_l      <= (others => '0');
         DATA        <= (others => '0');
-        stop_err    <= '0';
       else
         -- Always clear to 0 to make sure any assertion is only 1 clock period wide
         NEW_DATA <= '0';
@@ -106,6 +102,7 @@ begin
               bit_counter <= c_bit_extra_period_clks;
               bit_index   <= 0;
               ERROR       <= '0';
+              stop_err    <= '0';
             end if;
 
           when st_wait_bit =>
@@ -113,7 +110,7 @@ begin
               -- If we've counted a full bit, sample it
               data_l(bit_index) <= RX;
 
-              if(bit_index = 7) then
+              if(bit_index = DATA'length-1) then
                 -- If this is the last bit, reload the counter and move to the next state
                 bit_counter <= c_bit_period_clks;
                 state       <= st_wait_stop;
@@ -152,6 +149,6 @@ begin
         end case;
       end if;
     end if;
-  end process;
+  end process receive_proc;
 
 end behavioral;
