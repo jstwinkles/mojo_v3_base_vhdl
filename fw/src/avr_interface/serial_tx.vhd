@@ -55,8 +55,8 @@ architecture behavioral of serial_tx is
   -- Constants --
   ---------------
 
-    -- Period and half-period of a serial bit in terms of system clock periods (number of clks per bit)
-    constant c_bit_period_clks : natural := natural(ceil(real(G_CLK_FREQ_HZ)/real(G_BAUD_RATE_BPS))) - 1;
+  -- Period and half-period of a serial bit in terms of system clock periods (number of clks per bit)
+  constant c_bit_period_clks : natural := natural(ceil(real(G_CLK_FREQ_HZ)/real(G_BAUD_RATE_BPS))) - 1;
 
   -------------
   -- Signals --

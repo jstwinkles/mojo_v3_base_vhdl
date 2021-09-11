@@ -32,6 +32,7 @@ architecture behavioral of serial_tx_tb is
   ---------------
   -- Constants --
   ---------------
+
   constant c_clk_freq_hz        : natural := 50_000_000;
   constant c_clk_half_period_ns : time := 10 ns;
   constant c_baud_rate_bps      : natural := 500_000;
@@ -40,6 +41,7 @@ architecture behavioral of serial_tx_tb is
   -------------
   -- Signals --
   -------------
+
   signal clk      : std_logic := '0';
   signal rst      : std_logic := '0';
   signal tx       : std_logic;
@@ -66,7 +68,7 @@ begin
   -- Unit under test
   uut : entity work.serial_tx
   generic map(
-    G_CLK_FREQ_HZ => c_clk_freq_hz,
+    G_CLK_FREQ_HZ   => c_clk_freq_hz,
     G_BAUD_RATE_BPS => c_baud_rate_bps
   )
   port map(
